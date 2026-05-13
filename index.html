@@ -1928,36 +1928,44 @@
       color: var(--white);
     }
 
-    /* Back to Top button */
+    /* Back to Top floating button */
     .back-to-top-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: none;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: var(--radius);
-      padding: 8px 18px;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 0.8125rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      position: fixed;
+      bottom: 32px;
+      right: 28px;
+      z-index: 999;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
       cursor: pointer;
-      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0, 184, 169, 0.35);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+    }
+
+    .back-to-top-btn.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
 
     .back-to-top-btn:hover {
-      color: var(--white);
-      border-color: var(--accent);
-      background: rgba(0, 184, 169, 0.12);
-    }
-
-    .back-to-top-btn svg {
-      transition: transform var(--transition-fast);
+      background: var(--accent-dark);
     }
 
     .back-to-top-btn:hover svg {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
+    }
+
+    .back-to-top-btn svg {
+      transition: transform 0.2s ease;
     }
 
     /* Mobile service card active state (auto-triggered by scroll position) */
@@ -3718,12 +3726,6 @@
       <div class="footer-bottom">
         <p>© 2026 Consultive. All rights reserved. Bangladesh's Premier Odoo ERP Implementation Partner & Business
           Consultant.</p>
-        <button class="back-to-top-btn" id="back-to-top" aria-label="Scroll to top of page">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M6 9.5V2.5M2.5 5.5L6 2L9.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Back to Top
-        </button>
         <div class="footer-bottom-links">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>
@@ -3732,6 +3734,13 @@
       </div>
     </div>
   </footer>
+
+  <!-- Back to top floating button -->
+  <button class="back-to-top-btn" id="back-to-top" aria-label="Scroll to top of page">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M8 12V4M4 7.5L8 3.5L12 7.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
 
   <script>
     /* ============================================================
@@ -3916,6 +3925,9 @@
       /* ── Back to top ── */
       const backToTopBtn = document.getElementById('back-to-top');
       if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+          backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
         backToTopBtn.addEventListener('click', () => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
